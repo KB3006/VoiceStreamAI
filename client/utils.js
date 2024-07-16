@@ -11,7 +11,7 @@ let processor;
 let globalStream;
 let isRecording = false;
 
-const websocketAddress = document.querySelector('#websocketAddress');
+const websocketAddress = "https://devapi-asava.atirath.com/transcripting/";
 const selectedLanguage = document.querySelector('#languageSelect');
 const websocketStatus = document.querySelector('#webSocketStatus');
 const connectButton = document.querySelector("#connectButton");
@@ -52,7 +52,7 @@ function connectWebsocketHandler() {
         return;
     }
 
-    websocket = new WebSocket(websocketAddress.value);
+    websocket = new WebSocket("https://devapi-asava.atirath.com/transcripting/");
     websocket.onopen = () => {
         console.log("WebSocket connection established");
         websocketStatus.textContent = 'Connected';
