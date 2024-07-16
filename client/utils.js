@@ -11,7 +11,7 @@ let processor;
 let globalStream;
 let isRecording = false;
 
-const websocketAddress = "https://devapi-asava.atirath.com/transcripting/";
+const websocketAddress = "wss://as.ss/";
 const selectedLanguage = document.querySelector('#languageSelect');
 const websocketStatus = document.querySelector('#webSocketStatus');
 const connectButton = document.querySelector("#connectButton");
@@ -25,34 +25,20 @@ const selectedStrategy = document.querySelector('#bufferingStrategySelect');
 const chunk_length_seconds = document.querySelector('#chunk_length_seconds');
 const chunk_offset_seconds = document.querySelector('#chunk_offset_seconds');
 
-websocketAddress.addEventListener("input", resetWebsocketHandler);
-
-websocketAddress.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        connectWebsocketHandler();
-    }
-});
-
 connectButton.addEventListener("click", connectWebsocketHandler);
 
 function resetWebsocketHandler() {
     if (isRecording) {
         stopRecordingHandler();
     }
-    if (websocket.readyState === WebSocket.OPEN) {
+    if (websocket && websocket.readyState === WebSocket.OPEN) {
         websocket.close();
     }
     connectButton.disabled = false;
 }
 
 function connectWebsocketHandler() {
-    if (!websocketAddress.value) {
-        console.log("WebSocket address is required.");
-        return;
-    }
-
-    websocket = new WebSocket("https://devapi-asava.atirath.com/transcripting/");
+    websocket = new WebSocket(websocketAddress);
     websocket.onopen = () => {
         console.log("WebSocket connection established");
         websocketStatus.textContent = 'Connected';
@@ -259,9 +245,6 @@ function convertFloat32ToInt16(buffer) {
     return buf.buffer;
 }
 
-// Initialize WebSocket on page load
-//  window.onload = initWebSocket;
-
 function toggleBufferingStrategyPanel() {
     if (selectedStrategy.value === 'silence_at_end_of_chunk') {
         panel.classList.remove('hidden');
@@ -269,3 +252,9 @@ function toggleBufferingStrategyPanel() {
         panel.classList.add('hidden');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    chunk_length_seconds.value = 2;
+    chunk_offset_seconds.value = 0.4;
+    selectedLanguage.value = "multilingual";
+});
