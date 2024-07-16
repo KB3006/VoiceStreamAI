@@ -1,7 +1,7 @@
 import http.server
 import socketserver
 
-PORT = 5000
+PORT = 8000
 DIRECTORY = "."
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
