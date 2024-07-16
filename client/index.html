@@ -260,6 +260,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
     stopButton.addEventListener("click", stopRecordingHandler);
 
+    function uploadText(userType, text) {
+    const url = 'https://devapi-asava.atirath.com/agentAssist/upload/'; // Change to match your deployment URL if different
+    const formData = new FormData();
+    formData.append('user_type', userType);
+    formData.append('text', text);
+
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
     function stopRecordingHandler() {
         if (!isRecording) return;
         isRecording = false;
@@ -353,6 +372,26 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return buf.buffer;
     }
+
+    function getMyPrompts(userType) {
+    const url = new URL('https://devapi-asava.atirath.com/agentAssist/getmyprompts');
+    url.searchParams.append('user_type', userType); // Add query parameter for user type
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        if (data.prompt_id) {
+            console.log('Prompt ID:', data.prompt_id);
+            console.log('Prompt Text:', data.prompt_text);
+        } else {
+            console.log('No prompts available');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
 
     function toggleBufferingStrategyPanel() {
         if (selectedStrategy.value === 'silence_at_end_of_chunk') {
