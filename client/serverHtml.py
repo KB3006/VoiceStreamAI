@@ -15,6 +15,9 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         path = super().translate_path(path)
         return path.replace("/StreamTranscription", DIRECTORY, 1)
 
-with socketserver.TCPServer(("", PORT), MyHttpRequestHandler) as httpd:
+class MyTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True  # Add this line to allow reusing the same address
+
+with MyTCPServer(("", PORT), MyHttpRequestHandler) as httpd:
     print(f"Serving on port {PORT}")
     httpd.serve_forever()
