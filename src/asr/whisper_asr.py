@@ -26,7 +26,7 @@ class WhisperASR(ASRInterface):
         if client.config["language"] is not None:
             to_return = self.asr_pipeline(
                 file_path,
-                generate_kwargs={"language": client.config["language"]},
+                generate_kwargs={"language": client.config["language"],"task": "translate"},
             )["text"]
         else:
             to_return = self.asr_pipeline(file_path)["text"]
