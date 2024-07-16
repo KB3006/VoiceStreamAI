@@ -7,7 +7,6 @@ import websockets
 
 from src.client import Client
 
-
 class Server:
     """
     Represents the WebSocket server for handling real-time audio transcription.
@@ -68,7 +67,11 @@ class Server:
                 websocket, self.vad_pipeline, self.asr_pipeline
             )
 
-    async def handle_websocket(self, websocket):
+    async def handle_websocket(self, websocket, path):
+        if path != "/transcripting":
+            await websocket.close()
+            return
+
         client_id = str(uuid.uuid4())
         client = Client(client_id, self.sampling_rate, self.samples_width)
         self.connected_clients[client_id] = client
@@ -88,27 +91,21 @@ class Server:
             ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 
             # Load your server's certificate and private key
-            # Replace 'your_cert_path.pem' and 'your_key_path.pem' with the
-            # actual paths to your files
-            ssl_context.load_cert_chain(
-                certfile=self.certfile, keyfile=self.keyfile
-            )
+            ssl_context.load_cert_chain(certfile=self.certfile, keyfile=self.keyfile)
 
             print(
                 f"WebSocket server ready to accept secure connections on "
-                f"{self.host}:{self.port}"
+                f"{self.host}:{self.port}/transcripting"
             )
 
-            # Pass the SSL context to the serve function along with the host
-            # and port. Ensure the secure flag is set to True if using a secure
-            # WebSocket protocol (wss://)
+            # Pass the SSL context to the serve function along with the host and port
             return websockets.serve(
                 self.handle_websocket, self.host, self.port, ssl=ssl_context
             )
         else:
             print(
-                f"WebSocket server ready to accept secure connections on "
-                f"{self.host}:{self.port}"
+                f"WebSocket server ready to accept connections on "
+                f"{self.host}:{self.port}/transcripting"
             )
             return websockets.serve(
                 self.handle_websocket, self.host, self.port
