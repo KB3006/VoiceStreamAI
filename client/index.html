@@ -234,8 +234,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     async function setupRecordingWorkletNode() {
-        await context.audioWorklet.addModule('realtime-audio-processor.js');
+      const processorBlob = new Blob([`
+            class RealtimeAudioProcessor extends AudioWorkletProcessor {
+                constructor(options) {
+                    super();
+                }
 
+                process(inputs, outputs, params) {
+                    // ASR and VAD models typically require a mono audio.
+                    this.port.postMessage(inputs[0][0]);
+                    return true;
+                }
+            }
+
+            registerProcessor('realtime-audio-processor', RealtimeAudioProcessor);
+        `], { type: 'application/javascript' });
+
+        const processorBlobURL = URL.createObjectURL(processorBlob);
+        await context.audioWorklet.addModule(processorBlobURL);
         return new AudioWorkletNode(
             context,
             'realtime-audio-processor'
