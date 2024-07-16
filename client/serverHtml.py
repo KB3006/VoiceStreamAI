@@ -4,6 +4,7 @@ import socketserver
 PORT = 5000
 DIRECTORY = "."
 
+
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path in ["/StreamTranscription", "/StreamTranscription/"]:
