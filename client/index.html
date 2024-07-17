@@ -189,6 +189,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Fallback to plain text
             const span = document.createElement('span');
             span.textContent = transcript_data.text;
+            uploadText("customer",transcript_data.text);
             transcriptionDiv.appendChild(span);
             transcriptionDiv.appendChild(document.createElement('br'));
         }
