@@ -56,6 +56,16 @@
       background: white;
     }
 
+    #prompts {
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      width: 80%;
+      height: 150px;
+      overflow-y: auto;
+      background: white;
+    }
+
     .label {
       font-size: 0.9em;
       color: #555;
@@ -97,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const startButton = document.querySelector('#startButton');
     const stopButton = document.querySelector('#stopButton');
     const transcriptionDiv = document.querySelector('#transcription');
+    const promptsDiv = document.querySelector('#prompts');
     const languageDiv = document.querySelector('#detected_language');
     const processingTimeDiv = document.querySelector('#processing_time');
     const panel = document.querySelector('#silence_at_end_of_chunk_options_panel');
@@ -151,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
             updateTranscription(transcript_data);
         };
     }
-
+    
     function updateTranscription(transcript_data) {
         if (Array.isArray(transcript_data.words) && transcript_data.words.length > 0) {
             // Append words with color based on their probability
@@ -372,17 +383,23 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return buf.buffer;
     }
-
-    function getMyPrompts(userType) {
+    
+    function getMyPrompts() {
     const url = new URL('https://devapi-asava.atirath.com/agentAssist/getmyprompts');
-    url.searchParams.append('user_type', userType); // Add query parameter for user type
+    url.searchParams.append('user_type','agent'); // Add query parameter for user type
 
     fetch(url)
     .then(response => response.json())
     .then(data => {
         if (data.prompt_id) {
             console.log('Prompt ID:', data.prompt_id);
+
             console.log('Prompt Text:', data.prompt_text);
+            const span = document.createElement('span');
+            span.textContent = data.prompt_text;
+            promptsDiv.appendChild(span);
+            promptsDiv.appendChild(document.createElement('br'));
+            acknowledgePrompt(data.prompt_id);
         } else {
             console.log('No prompts available');
         }
@@ -391,6 +408,29 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
 }
+setInterval(getMyPrompts,300);
+    
+function acknowledgePrompt(promptId) {
+  fetch('/agentAssist/acknowledgeprompt', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      'prompt_id': promptId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.status);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+// Example usage
+
 
 
     function toggleBufferingStrategyPanel() {
