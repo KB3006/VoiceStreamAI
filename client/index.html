@@ -388,6 +388,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     function getMyPrompts() {
+        if(selectedPerson.value == "customer"){return;}
     const url = new URL('https://devapi-asava.atirath.com/agentAssist/getmyprompts');
     url.searchParams.append('user_type','agent'); // Add query parameter for user type
 
@@ -411,7 +412,10 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
 }
+if(selectedPerson.value == "agent")
+{
 setInterval(getMyPrompts,300);
+}
     
 function acknowledgePrompt(promptId) {
   fetch('/agentAssist/acknowledgeprompt', {
