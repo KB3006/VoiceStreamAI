@@ -102,6 +102,8 @@ let isRecording = false;
 document.addEventListener("DOMContentLoaded", function() {
     const websocketAddress = document.querySelector('#websocketAddress');
     const selectedLanguage = document.querySelector('#languageSelect');
+    const selectedPerson = document.querySelector('#person');
+    
     const websocketStatus = document.querySelector('#webSocketStatus');
     const connectButton = document.querySelector("#connectButton");
     const startButton = document.querySelector('#startButton');
@@ -189,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Fallback to plain text
             const span = document.createElement('span');
             span.textContent = transcript_data.text;
-            uploadText("customer",transcript_data.text);
+            uploadText(selectedPerson.value,transcript_data.text);
             transcriptionDiv.appendChild(span);
             transcriptionDiv.appendChild(document.createElement('br'));
         }
@@ -503,8 +505,8 @@ function acknowledgePrompt(promptId) {
   <div class="control-group">
     <label class="label" for="person">Person:</label>
     <select id="person">
-      <option value="Agent">Agent</option>
-      <option value="Customer">Customer</option>
+      <option value="agent">Agent</option>
+      <option value="customer">Customer</option>
       
     </select>
   </div>
