@@ -101,6 +101,7 @@ let isRecording = false;
 
 document.addEventListener("DOMContentLoaded", function() {
     const websocketAddress = document.querySelector('#websocketAddress');
+    const roomId = document.querySelector('#roomId');
     const selectedLanguage = document.querySelector('#languageSelect');
     const selectedPerson = document.querySelector('#person');
     
@@ -274,11 +275,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     stopButton.addEventListener("click", stopRecordingHandler);
 
-    function uploadText(userType, text) {
+    function uploadText(userType,text) {
     const url = 'https://devapi-asava.atirath.com/agentAssist/upload/'; // Change to match your deployment URL if different
     const formData = new FormData();
     formData.append('user_type', userType);
     formData.append('text', text);
+    formData.append('roomId',roomId.value)
 
     fetch(url, {
         method: 'POST',
@@ -391,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if(selectedPerson.value == "customer"){return;}
     const url = new URL('https://devapi-asava.atirath.com/agentAssist/getmyprompts');
     url.searchParams.append('user_type','agent'); // Add query parameter for user type
+    url.searchParams.append('roomId',roomId.value); // Add query parameter for user type
 
     fetch(url)
     .then(response => response.json())
@@ -457,6 +460,11 @@ function acknowledgePrompt(promptId) {
   <div class="control-group">
     <label class="label" for="websocketAddress">WebSocket Address:</label>
     <input type="text" id="websocketAddress" value="https://devapi-asava.atirath.com/transcripting" readonly>
+  </div>
+
+  <div class="control-group">
+    <label class="label" for="roomId">Room ID:</label>
+    <input type="text" id="roomId" value="a1" readonly>
   </div>
   <div class="control-group">
     <label class="label" for="bufferingStrategySelect"
