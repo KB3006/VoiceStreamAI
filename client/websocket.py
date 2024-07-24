@@ -21,27 +21,6 @@ LANGUAGE = 'english'  # Change as needed
 websocket = None
 isRecording = False
 
-def on_send(data):
-    print("Sending data:", len(data), "bytes")
-
-def on_receive(response):
-    print(response)
-    try:
-        data = json.loads(response)
-        if 'words' in data:
-            print("Transcription:", ' '.join(word['word'] for word in data['words']))
-        else:
-            print("Transcription:", data['text'])
-        if 'language' in data:
-            print("Detected Language:", data['language'], "Probability:", data.get('language_probability', 'N/A'))
-        if 'processing_time' in data:
-            print("Processing time:", data['processing_time'])
-    except json.JSONDecodeError:
-        print("Received non-JSON message:", response)
-
-def on_end():
-    print("Recording and streaming ended")
-
 async def connect():
     global websocket
     websocket = await websockets.connect(WEBSOCKET_ADDRESS)
@@ -73,9 +52,7 @@ async def connect():
     print("Recording...")
 
     async def receive_messages():
-        # print("called this")
         while True:
-            print("called this")
             try:
                 response = await websocket.recv()
                 print("Received message from server")
@@ -83,19 +60,41 @@ async def connect():
             except websockets.exceptions.ConnectionClosed as e:
                 print("Connection closed: ", e)
                 break
+            except Exception as e:
+                print("Error receiving message:", e)
+                break
 
-    receive_task = asyncio.create_task(receive_messages())
+    async def send_audio():
+        try:
+            while True:
+                data = stream.read(CHUNK)
+                # on_send(data)
+                await websocket.send(data)
+                await asyncio.sleep(0.01)
+        except Exception as e:
+            print("Error during recording:", e)
+        finally:
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
+            on_end()
 
-    while True:
-        data = stream.read(CHUNK)
-        on_send(data)
-        await websocket.send(data)
-        await asyncio.sleep(0.01)
+    # Run both tasks concurrently
+    await asyncio.gather(receive_messages(), send_audio())
 
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
-    on_end()
+
+def on_receive(response):
+    print(response)
+    try:
+        data = json.loads(response)
+        
+        print("Transcription:", data['text'])
+        
+    except json.JSONDecodeError:
+        print("Received non-JSON message:", response)
+
+def on_end():
+    print("Recording and streaming ended")
 
 def process_audio(sample_data):
     output_sample_rate = 16000
@@ -112,7 +111,7 @@ def decrease_sample_rate(buffer, input_sample_rate, output_sample_rate):
 
     sample_rate_ratio = input_sample_rate / output_sample_rate
     new_length = int(len(buffer) / sample_rate_ratio)
-    result = [0] * new_length
+    result = [0]* new_length
     offset_result = 0
     offset_buffer = 0
     while offset_result < new_length:
