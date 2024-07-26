@@ -68,7 +68,7 @@ class Server:
             )
 
     async def handle_websocket(self, websocket, path):
-        if path != "/transcripting":
+        if path != "/transcription":
             await websocket.close()
             return
 
@@ -95,7 +95,7 @@ class Server:
 
             print(
                 f"WebSocket server ready to accept secure connections on "
-                f"{self.host}:{self.port}/transcripting"
+                f"{self.host}:{self.port}/transcription"
             )
 
             # Pass the SSL context to the serve function along with the host and port
@@ -105,7 +105,7 @@ class Server:
         else:
             print(
                 f"WebSocket server ready to accept connections on "
-                f"{self.host}:{self.port}/transcripting"
+                f"{self.host}:{self.port}/transcription"
             )
             return websockets.serve(
                 self.handle_websocket, self.host, self.port

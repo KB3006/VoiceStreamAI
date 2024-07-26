@@ -4,7 +4,7 @@ import pyaudio
 import json
 
 # WebSocket server address
-WEBSOCKET_ADDRESS = 'wss://devapi-asava.atirath.com/transcripting'
+WEBSOCKET_ADDRESS = 'wss://devapi-asava.atirath.com/transcription'
 
 # Audio stream settings
 CHUNK = 1024
