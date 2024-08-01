@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function() {
         while (l--) {
             buf[l] = Math.min(1, buffer[l]) * 0x7FFF;
         }
-        console.log(type(buf.buffer))
+        console.log(typeof buf.buffer);
         return buf.buffer;
     }
     
