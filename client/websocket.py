@@ -13,9 +13,10 @@ CHANNELS = 1
 RATE = 16000
 
 # Room and user info
-ROOM_ID = 'a1'
-PERSON = 'agent'
-LANGUAGE = 'english'  # Change as needed
+REPORT_ID = 'REPORT1'
+SESSION_ID = 'SESSION1'
+PERSON = 'agent' # OR customer
+LANGUAGE = 'english'  # Change as needed (null if it may be multilingual)
 
 # Global variables
 websocket = None
@@ -70,7 +71,7 @@ async def connect():
                 data = stream.read(CHUNK)
                 # on_send(data)
                 await websocket.send(data)
-                await asyncio.sleep(0.01)
+                # await asyncio.sleep(0.01)
         except Exception as e:
             print("Error during recording:", e)
         finally:
