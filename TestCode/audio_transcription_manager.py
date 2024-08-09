@@ -40,6 +40,7 @@ class AudioTranscriptionManager:
             while True:
                 data = stream.read(CHUNK)
                 await self.connection_manager.websocket.send(data)
+                await asyncio.sleep(0.01)
         except Exception as e:
             print("Error during recording:", e)
         finally:
