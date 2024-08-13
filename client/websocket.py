@@ -101,6 +101,7 @@ def process_audio(sample_data):
     output_sample_rate = 16000
     decrease_result_buffer = decrease_sample_rate(sample_data, RATE, output_sample_rate)
     audio_data = convert_float32_to_int16(decrease_result_buffer)
+    print("audio received")
     return audio_data
 
 def decrease_sample_rate(buffer, input_sample_rate, output_sample_rate):
