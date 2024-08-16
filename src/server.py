@@ -77,7 +77,7 @@ class Server:
         self.connected_clients[client_id] = client
 
         print(f"Client {client_id} connected")
-
+        await websocket.send(f"Client {client_id} connected")
         try:
             await self.handle_audio(client, websocket)
         except websockets.ConnectionClosed as e:
