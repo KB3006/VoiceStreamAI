@@ -1,5 +1,5 @@
 import os
-
+import time
 import torch
 from transformers import pipeline
 
@@ -28,8 +28,9 @@ class WhisperASR(ASRInterface):
                 file_path,
                 generate_kwargs={"language": client.config["language"],"task": "translate"})["text"]
         else:
+            pip_time = time.time()
             to_return = self.asr_pipeline(file_path,generate_kwargs={"task": "translate"})["text"]
-
+            print(str(time.time() - pip_time ) + " seconds for pipeline")
         os.remove(file_path)
 
         to_return = {

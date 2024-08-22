@@ -1,5 +1,5 @@
 import os
-
+import time
 from faster_whisper import WhisperModel
 
 from src.audio_utils import save_audio_to_file
@@ -119,9 +119,11 @@ class FasterWhisperASR(ASRInterface):
         )
 
     async def transcribe(self, client):
+        x = time.time()
         file_path = await save_audio_to_file(
             client.scratch_buffer, client.get_file_name()
         )
+        print(str(time.time() - x) + " -- file saving time")
 
         language = (
             None
