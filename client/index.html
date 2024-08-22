@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function() {
     stopButton.addEventListener("click", stopRecordingHandler);
 
     function uploadText(userType,text) {
-    const url = 'https://devapi-asava.atirath.com/agentAssist/upload/'; // Change to match your deployment URL if different
+    const url = 'https://travbridge.atirath.com/agentAssist/upload/'; // Change to match your deployment URL if different
     const formData = new FormData();
     formData.append('user_type', userType);
     formData.append('text', text);
@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     function getMyPrompts() {
         if(selectedPerson.value == "customer"){return;}
-    const url = new URL('https://devapi-asava.atirath.com/agentAssist/getmyprompts');
+    const url = new URL('https://travbridge.atirath.com/agentAssist/getmyprompts');
     url.searchParams.append('user_type','agent'); // Add query parameter for user type
     url.searchParams.append('roomId',roomId.value); // Add query parameter for user type
 
@@ -467,7 +467,7 @@ function acknowledgePrompt(promptId) {
 <div class="controls">
   <div class="control-group">
     <label class="label" for="websocketAddress">WebSocket Address:</label>
-    <input type="text" id="websocketAddress" value="https://devapi-asava.atirath.com/transcription" readonly>
+    <input type="text" id="websocketAddress" value="https://travbridge.atirath.com/transcription" readonly>
   </div>
 
   <div class="control-group">
