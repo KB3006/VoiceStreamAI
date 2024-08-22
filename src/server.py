@@ -55,6 +55,7 @@ class Server:
                 client.append_audio_data(message)
             elif isinstance(message, str):
                 config = json.loads(message)
+                print(config)
                 if config.get("type") == "config":
                     client.update_config(config["data"])
                     print(config["data"])
