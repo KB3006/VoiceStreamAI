@@ -151,6 +151,8 @@ document.addEventListener("DOMContentLoaded", function() {
             websocketStatus.textContent = 'Connected';
             startButton.disabled = false;
             connectButton.disabled = true;
+            let language = selectedLanguage.value !== 'multilingual' ? selectedLanguage.value : null;
+            sendAudioConfig(language);
         };
         websocket.onclose = event => {
             console.log("WebSocket connection closed", event);
@@ -227,8 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         let onSuccess = async (stream) => {
             // Push user config to server
-            let language = selectedLanguage.value !== 'multilingual' ? selectedLanguage.value : null;
-            sendAudioConfig(language);
+            
 
             globalStream = stream;
             const input = context.createMediaStreamSource(stream);
