@@ -57,6 +57,7 @@ class Server:
                 config = json.loads(message)
                 if config.get("type") == "config":
                     client.update_config(config["data"])
+                    print(config["data"])
                     logging.debug(f"Updated config: {client.config}")
                     continue
             else:
