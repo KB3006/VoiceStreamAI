@@ -161,8 +161,15 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         websocket.onmessage = event => {
             console.log("Message from server:", event.data);
+            if (event.data.startsWith("Client") && event.data.endsWith("connected"))
+            {
+              console.log("New client");
+            }
+            else
+            {
             const transcript_data = JSON.parse(event.data);
             updateTranscription(transcript_data);
+            }
         };
     }
     
