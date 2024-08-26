@@ -87,6 +87,12 @@ class Server:
         finally:
             del self.connected_clients[client_id]
 
+    def GetClient(self,client_id):
+        for i in self.connected_clients.keys():
+            if self.connected_clients[i].client_id == client_id:
+                return self.connected_clients[i]
+        
+        return None
     def start(self):
         if self.certfile:
             # Create an SSL context to enforce encrypted connections
@@ -97,7 +103,7 @@ class Server:
 
             print(
                 f"WebSocket server ready to accept secure connections on "
-                f"{self.host}:{self.port}/transcription/voice"
+                f"{self.host}:{self.port}/transcription/voice here ssl true"
             )
 
             # Pass the SSL context to the serve function along with the host and port
@@ -107,7 +113,7 @@ class Server:
         else:
             print(
                 f"WebSocket server ready to accept connections on "
-                f"{self.host}:{self.port}/transcription/voice"
+                f"{self.host}:{self.port}/transcription/voice here ssl false"
             )
             return websockets.serve(
                 self.handle_websocket, self.host, self.port
