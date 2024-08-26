@@ -70,14 +70,18 @@ class Server:
             )
 
     async def handle_websocket(self, websocket, path):
+
+        print(f"Client connecting with headers:")
+        for header, value in headers.items():
+            print(f"{header}: {value}")
+        
+        
         if path != "/transcription/voice":
             await websocket.close()
             return
         headers = websocket.request_headers
 
-        print(f"Client connecting with headers:")
-        for header, value in headers.items():
-            print(f"{header}: {value}")
+        
         client_id = str(uuid.uuid4())
         client = Client(client_id, self.sampling_rate, self.samples_width)
         self.connected_clients[client_id] = client
