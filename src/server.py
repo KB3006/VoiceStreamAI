@@ -75,6 +75,8 @@ class Server:
         print(f"Client connecting with headers:")
         for header, value in headers.items():
             print(f"{header}: {value}")
+        
+        print(path)
         if path != "/transcription/voice":
             await websocket.close()
             return
