@@ -50,14 +50,15 @@ class Client:
         )
 
     def update_config(self, config_data):
-        self.config.update(config_data)
-        self.buffering_strategy = (
-            BufferingStrategyFactory.create_buffering_strategy(
-                self.config["processing_strategy"],
-                self,
-                **self.config["processing_args"],
+        if config_data :
+            self.config.update(config_data)
+            self.buffering_strategy = (
+                BufferingStrategyFactory.create_buffering_strategy(
+                    self.config["processing_strategy"],
+                    self,
+                    **self.config["processing_args"],
+                )
             )
-        )
 
     def append_audio_data(self, audio_data):
         self.buffer.extend(audio_data)
