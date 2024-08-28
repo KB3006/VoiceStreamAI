@@ -58,6 +58,7 @@ class Server:
                     config = json.loads(message)
                 except Exception as e:
                     print(e)
+                    print(message)
                     config = {"type" : "config","data":None}
                 print(config)
                 if config.get("type") == "config":
