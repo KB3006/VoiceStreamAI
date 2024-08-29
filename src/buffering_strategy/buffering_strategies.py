@@ -106,7 +106,7 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
         """
         start = time.time()
         vad_results = await vad_pipeline.detect_activity(self.client)
-        print("vad_time - " + str(time.time() - start))
+        # print("vad_time - " + str(time.time() - start))
         if len(vad_results) == 0:
             self.client.scratch_buffer.clear()
             self.client.buffer.clear()
@@ -119,7 +119,7 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
         ) - self.chunk_offset_seconds
         if vad_results[-1]["end"] < last_segment_should_end_before:
             transcription = await asr_pipeline.transcribe(self.client)
-            print("transcription_time - " + str(time.time() - start))
+            # print("transcription_time - " + str(time.time() - start))
             if transcription["text"] != "":
                 end = time.time()
                 transcription["processing_time"] = end - start
