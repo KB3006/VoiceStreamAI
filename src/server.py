@@ -65,7 +65,7 @@ class Server:
                     sample_string = sample_string_bytes.decode("ascii")
                     
                     print(f"Decoded string: {sample_string}")
-                    config = json.loads(message)
+                    config = json.loads(sample_string)
                     print(config)
                 print(config)
                 if config.get("type") == "config":
