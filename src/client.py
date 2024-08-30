@@ -39,6 +39,8 @@ class Client:
         }
         self.file_counter = 0
         self.total_samples = 0
+        self.call_id = ""
+        self.session_id = ""
         self.sampling_rate = sampling_rate
         self.samples_width = samples_width
         self.buffering_strategy = (
@@ -51,7 +53,12 @@ class Client:
 
     def update_config(self, config_data):
         if config_data :
-            self.config.update(config_data)
+            self.config.update(config_data["data"])
+            try:
+                self.call_id = config_data["CallCli"]
+                self.session_id = config_data["CallSessionId"]
+            except Exception as e:
+                print("callcli and callsessionId not there")
             self.buffering_strategy = (
                 BufferingStrategyFactory.create_buffering_strategy(
                     self.config["processing_strategy"],
@@ -75,5 +82,5 @@ class Client:
 
     def process_audio(self, websocket, vad_pipeline, asr_pipeline):
         self.buffering_strategy.process_audio(
-            websocket, vad_pipeline, asr_pipeline
+            websocket, vad_pipeline, asr_pipeline , sessionId=self.session_id,callId=self.call_id
         )

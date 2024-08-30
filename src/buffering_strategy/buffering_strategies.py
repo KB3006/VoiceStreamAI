@@ -57,7 +57,7 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
 
         self.processing_flag = False
 
-    def process_audio(self, websocket, vad_pipeline, asr_pipeline):
+    def process_audio(self, websocket, vad_pipeline, asr_pipeline,sessionId = "",callId = ""):
         """
         Process audio chunks by checking their length and scheduling
         asynchronous processing.
@@ -87,10 +87,10 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
             self.processing_flag = True
             # Schedule the processing in a separate task
             asyncio.create_task(
-                self.process_audio_async(websocket, vad_pipeline, asr_pipeline)
+                self.process_audio_async(websocket, vad_pipeline, asr_pipeline,sessionId=sessionId,callId=callId)
             )
 
-    async def process_audio_async(self, websocket, vad_pipeline, asr_pipeline):
+    async def process_audio_async(self, websocket, vad_pipeline, asr_pipeline,sessionId = "",callId = ""):
         """
         Asynchronously process audio for activity detection and transcription.
 
@@ -121,9 +121,12 @@ class SilenceAtEndOfChunk(BufferingStrategyInterface):
             transcription = await asr_pipeline.transcribe(self.client)
             # print("transcription_time - " + str(time.time() - start))
             if transcription["text"] != "":
+                transcription["callId"] = callId
+                transcription["sessionId"] = sessionId
                 end = time.time()
                 transcription["processing_time"] = end - start
                 json_transcription = json.dumps(transcription)
+            
                 print(json_transcription)
                 await websocket.send(json_transcription)
             self.client.scratch_buffer.clear()

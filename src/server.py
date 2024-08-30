@@ -58,19 +58,19 @@ class Server:
                     config = json.loads(message)
                 except Exception as e:
                     print(e)
-                    print(message)
+                    # print(message)
                     base64_bytes = message.encode("ascii")
 
                     sample_string_bytes = base64.b64decode(base64_bytes)
                     sample_string = sample_string_bytes.decode("ascii")
                     
-                    print(f"Decoded string: {sample_string}")
+                    # print(f"Decoded string: {sample_string}")
                     config = json.loads(sample_string)
-                    print(config)
-                print(config)
+                    # print(config)
+                # print(config)
                 if config.get("type") == "config":
-                    client.update_config(config["data"])
-                    print(config["data"])
+                    client.update_config(config)
+                    # print(config["data"])
                     logging.debug(f"Updated config: {client.config}")
                     continue
             else:
