@@ -4,7 +4,7 @@ import ssl
 import uuid
 
 import websockets
-
+import base64
 from src.client import Client
 
 class Server:
@@ -59,7 +59,14 @@ class Server:
                 except Exception as e:
                     print(e)
                     print(message)
-                    config = {"type" : "config","data":None}
+                    base64_bytes = message.encode("ascii")
+
+                    sample_string_bytes = base64.b64decode(base64_bytes)
+                    sample_string = sample_string_bytes.decode("ascii")
+                    
+                    print(f"Decoded string: {sample_string}")
+                    config = json.loads(message)
+                    print(config)
                 print(config)
                 if config.get("type") == "config":
                     client.update_config(config["data"])
